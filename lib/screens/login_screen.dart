@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'sign_up_screen.dart';
 import 'swipe_screen.dart';
 
@@ -13,12 +14,65 @@ class _LoginScreenState extends State<LoginScreen> {
   final _emailController = TextEditingController();
   final _passwordController = TextEditingController();
   bool _obscurePassword = true;
+  bool _isLoading = false; // 로딩 상태 추가
 
   @override
   void dispose() {
     _emailController.dispose();
     _passwordController.dispose();
     super.dispose();
+  }
+
+  // 로그인 함수
+  Future<void> _login() async {
+    final email = _emailController.text.trim();
+    final password = _passwordController.text.trim();
+
+    // 빈칸 체크
+    if (email.isEmpty || password.isEmpty) {
+      _showError('이메일과 비밀번호를 입력해주세요');
+      return;
+    }
+
+    setState(() => _isLoading = true);
+
+    try {
+      await FirebaseAuth.instance.signInWithEmailAndPassword(
+        email: email,
+        password: password,
+      );
+
+      if (mounted) {
+        Navigator.pushAndRemoveUntil(
+          context,
+          MaterialPageRoute(builder: (context) => const SwipeScreen()),
+          (route) => false,
+        );
+      }
+    } on FirebaseAuthException catch (e) {
+      String message = '로그인에 실패했습니다';
+
+      if (e.code == 'user-not-found') {
+        message = '존재하지 않는 이메일입니다';
+      } else if (e.code == 'wrong-password') {
+        message = '비밀번호가 틀렸습니다';
+      } else if (e.code == 'invalid-email') {
+        message = '이메일 형식이 올바르지 않습니다';
+      }
+
+      _showError(message);
+    } finally {
+      if (mounted) setState(() => _isLoading = false);
+    }
+  }
+
+  void _showError(String message) {
+    ScaffoldMessenger.of(context).showSnackBar(
+      SnackBar(
+        content: Text(message),
+        backgroundColor: Colors.red[400],
+      ),
+    );
   }
 
   @override
@@ -32,7 +86,6 @@ class _LoginScreenState extends State<LoginScreen> {
             children: [
               const Spacer(flex: 3),
 
-              // 로고
               const Text(
                 'SWIFIT',
                 style: TextStyle(
@@ -52,14 +105,12 @@ class _LoginScreenState extends State<LoginScreen> {
 
               const Spacer(flex: 1),
 
-              // 이메일
               _buildTextField(
                 controller: _emailController,
                 hint: '이메일',
               ),
               const SizedBox(height: 12),
 
-              // 비밀번호
               _buildTextField(
                 controller: _passwordController,
                 hint: '비밀번호',
@@ -69,7 +120,6 @@ class _LoginScreenState extends State<LoginScreen> {
                 },
               ),
 
-              // 비밀번호 찾기
               Align(
                 alignment: Alignment.centerRight,
                 child: TextButton(
@@ -91,30 +141,23 @@ class _LoginScreenState extends State<LoginScreen> {
                 width: double.infinity,
                 height: 56,
                 child: ElevatedButton(
-                  onPressed: () {
-                    // TODO: 로그인 로직
-                      Navigator.pushAndRemoveUntil(
-                       context,
-                       MaterialPageRoute(
-                        builder: (context) => const SwipeScreen(),
-                      ),
-                      (route) => false,
-                     );
-                  },
+                  onPressed: _isLoading ? null : _login, // 로딩 중엔 비활성화
                   style: ElevatedButton.styleFrom(
                     backgroundColor: Colors.black,
                     shape: RoundedRectangleBorder(
                       borderRadius: BorderRadius.circular(16),
                     ),
                   ),
-                  child: const Text(
-                    '로그인',
-                    style: TextStyle(
-                      color: Colors.white,
-                      fontSize: 16,
-                      fontWeight: FontWeight.w600,
-                    ),
-                  ),
+                  child: _isLoading
+                      ? const CircularProgressIndicator(color: Colors.white) // 로딩 스피너
+                      : const Text(
+                          '로그인',
+                          style: TextStyle(
+                            color: Colors.white,
+                            fontSize: 16,
+                            fontWeight: FontWeight.w600,
+                          ),
+                        ),
                 ),
               ),
 

@@ -128,10 +128,16 @@ class _FeedScreenState extends State<FeedScreen> {
                         onPressed: _selectedIndexes.isEmpty
                             ? null
                             : () {
+                              final selectedItems = _selectedIndexes.map((i) => {
+                                 'image': fashionItems[i]['image']!,
+                                  'tag': fashionItems[i]['tag']!,
+                                }).toList();
                                 Navigator.push(
                                   context,
                                   MaterialPageRoute(
-                                    builder: (context) => const FirstLoadingScreen(),
+                                    builder: (context) => FirstLoadingScreen(
+                                      selectedItems: selectedItems,
+                                    ),
                                   ),
                                 );
                               },

@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:firebase_auth/firebase_auth.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'result_screen.dart';
 
 class SwipeScreen extends StatefulWidget {
@@ -54,23 +56,55 @@ class _SwipeScreenState extends State<SwipeScreen> {
     '내 옷장과 어울릴 듯',
   ];
 
-  void _nextCard(String action) {
+  // Firestore 저장 함수
+  Future<void> _saveSwipeData(String action) async {
+    try {
+      final user = FirebaseAuth.instance.currentUser;
+      if (user == null) return;
+
+      final card = cards[_currentIndex];
+
+      await FirebaseFirestore.instance
+          .collection('users')
+          .doc(user.uid)
+          .collection('swipes')
+          .add({
+        'imageId': card['image'],
+        'title': card['title'],
+        'style': card['style'],
+        'action': action,                    // like / dislike / save
+        'tags': _selectedTags.toList(),      // 선택한 태그
+        'timestamp': FieldValue.serverTimestamp(),
+      });
+    } catch (e) {
+      debugPrint('스와이프 저장 실패: $e');
+    }
+  }
+
+  Future<void> _nextCard(String action) async {
+    // Firestore에 저장
+    await _saveSwipeData(action);
+
     if (action == 'like') _likeCount++;
-    if (action == 'save') _likeCount++; // 저장도 좋아요로 카운트
+    if (action == 'save') _likeCount++;
 
     if (_currentIndex >= cards.length - 1) {
-      Navigator.pushReplacement(
-        context,
-        MaterialPageRoute(
-          builder: (context) => ResultScreen(likeCount: _likeCount),
-        ),
-      );
+      if (mounted) {
+        Navigator.pushReplacement(
+          context,
+          MaterialPageRoute(
+            builder: (context) => ResultScreen(likeCount: _likeCount),
+          ),
+        );
+      }
     } else {
-      setState(() {
-        _currentIndex++;
-        _selectedTags.clear();
-        _dragX = 0;
-      });
+      if (mounted) {
+        setState(() {
+          _currentIndex++;
+          _selectedTags.clear();
+          _dragX = 0;
+        });
+      }
     }
   }
 
@@ -118,7 +152,6 @@ class _SwipeScreenState extends State<SwipeScreen> {
             // 카드 이미지
             GestureDetector(
               onDoubleTap: () {
-                // 더블탭 = 저장
                 _showSaveSnackbar();
                 _nextCard('save');
               },
@@ -323,7 +356,6 @@ class _SwipeScreenState extends State<SwipeScreen> {
               child: Row(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
-                  // 싫어요
                   _buildActionButton(
                     icon: Icons.close,
                     color: Colors.grey[300]!,
@@ -331,7 +363,6 @@ class _SwipeScreenState extends State<SwipeScreen> {
                     size: 56,
                     onTap: () => _nextCard('dislike'),
                   ),
-                  // 좋아요 (크게)
                   _buildActionButton(
                     icon: Icons.favorite,
                     color: Colors.black,
@@ -339,7 +370,6 @@ class _SwipeScreenState extends State<SwipeScreen> {
                     size: 72,
                     onTap: () => _nextCard('like'),
                   ),
-                  // 저장 (북마크로 변경!)
                   _buildActionButton(
                     icon: Icons.bookmark_border,
                     color: Colors.grey[300]!,
@@ -359,7 +389,6 @@ class _SwipeScreenState extends State<SwipeScreen> {
     );
   }
 
-  // 저장 스낵바
   void _showSaveSnackbar() {
     ScaffoldMessenger.of(context).showSnackBar(
       SnackBar(

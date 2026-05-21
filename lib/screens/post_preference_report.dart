@@ -3,7 +3,12 @@ import 'sign_up_screen.dart';
 import 'login_screen.dart';
 
 class PostPreferenceReport extends StatelessWidget {
-  const PostPreferenceReport({super.key});
+  final List<Map<String, String>> selectedItems;
+
+  const PostPreferenceReport({
+    super.key,
+    required this.selectedItems,
+  });
 
   @override
   Widget build(BuildContext context) {
@@ -16,7 +21,6 @@ class PostPreferenceReport extends StatelessWidget {
             children: [
               const Spacer(flex: 2),
 
-              // 타이틀
               const Text(
                 '당신의 취향 리포트가\n준비되었어요',
                 textAlign: TextAlign.center,
@@ -39,7 +43,6 @@ class PostPreferenceReport extends StatelessWidget {
 
               const Spacer(flex: 1),
 
-              // Style DNA 카드
               Container(
                 width: double.infinity,
                 padding: const EdgeInsets.all(24),
@@ -59,7 +62,6 @@ class PostPreferenceReport extends StatelessWidget {
                     ),
                     const SizedBox(height: 16),
 
-                    // 해시태그
                     Wrap(
                       spacing: 8,
                       runSpacing: 8,
@@ -87,7 +89,6 @@ class PostPreferenceReport extends StatelessWidget {
 
                     const SizedBox(height: 24),
 
-                    // 취향 정확도
                     Row(
                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
                       children: [
@@ -135,7 +136,6 @@ class PostPreferenceReport extends StatelessWidget {
 
               const Spacer(flex: 1),
 
-              // 회원가입 버튼
               SizedBox(
                 width: double.infinity,
                 height: 56,
@@ -144,7 +144,9 @@ class PostPreferenceReport extends StatelessWidget {
                     Navigator.push(
                       context,
                       MaterialPageRoute(
-                        builder: (context) => const SignUpScreen(),
+                        builder: (context) => SignUpScreen( // const 제거!
+                          selectedItems: selectedItems,
+                        ),
                       ),
                     );
                   },
@@ -167,7 +169,6 @@ class PostPreferenceReport extends StatelessWidget {
 
               const SizedBox(height: 16),
 
-              // 로그인 링크
               GestureDetector(
                 onTap: () {
                   Navigator.push(

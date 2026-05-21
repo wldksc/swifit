@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "445701072155",
+    "project_id": "swifit-gift",
+    "storage_bucket": "swifit-gift.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:445701072155:android:ba3668bdbc9129ba9b5fbe",
+        "android_client_info": {
+          "package_name": "com.example.swifit"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyDM5aOdQFSoT52GdYwCEpcE9RSygfxk9Og"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
