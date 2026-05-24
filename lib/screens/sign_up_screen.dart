@@ -140,7 +140,7 @@ class _SignUpScreenState extends State<SignUpScreen> {
               ),
               const SizedBox(height: 8),
               const Text(
-                '회원가입하고 취향 탐색을 시작하세요',
+                '회원가입 하고 취향 탐색을 시작하세요',
                 style: TextStyle(
                   fontSize: 15,
                   fontWeight: FontWeight.w500,

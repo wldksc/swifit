@@ -32,7 +32,7 @@ class PostPreferenceReport extends StatelessWidget {
               ),
               const SizedBox(height: 12),
               Text(
-                '회원가입하면 스타일 리포트와\n추천 결과를 바로 확인할 수 있어요',
+                '회원가입 하면 스타일 리포트와\n추천 결과를 바로 확인할 수 있어요',
                 textAlign: TextAlign.center,
                 style: TextStyle(
                   color: Colors.grey[500],
@@ -157,7 +157,7 @@ class PostPreferenceReport extends StatelessWidget {
                     ),
                   ),
                   child: const Text(
-                    '회원가입하고 결과 저장하기',
+                    '회원가입 하고 결과 저장하기',
                     style: TextStyle(
                       color: Colors.white,
                       fontSize: 16,

@@ -21,7 +21,7 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
     },
     {
       'image': 'assets/images/onboarding2.jpg',
-      'title': '취향을 말로\n설명 못해도 괜찮아요',
+      'title': '취향을 말로\n설명 못 해도 괜찮아요',
       'subtitle': '끌리는 걸 고르기만 하면\nSWIFIT이 당신의 스타일을 찾아드립니다.',
     },
   ];

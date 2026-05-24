@@ -259,7 +259,7 @@ class ResultScreen extends StatelessWidget {
                     ),
                   ),
                   child: Text(
-                    isInitial ? '취향 탐색 이어가기 →' : '내 취향 아이템 보러가기 →',
+                    isInitial ? '취향 탐색 이어가기 →' : '내 취향 아이템 보러 가기 →',
                     style: TextStyle(
                       color: Colors.white,
                       fontSize: 16,

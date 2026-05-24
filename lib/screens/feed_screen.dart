@@ -65,7 +65,7 @@ class _FeedScreenState extends State<FeedScreen> {
                   ),
                   const SizedBox(height: 8),
                   Text(
-                    '정답은 없어요. 끌리는 스타일을 선택해보세요',
+                    '정답은 없어요. 끌리는 스타일을 선택해 보세요',
                     style: TextStyle(
                       color: Colors.grey[500],
                       fontSize: 13,
